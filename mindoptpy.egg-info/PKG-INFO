@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: mindoptpy
+Version: 1.3.0
+Summary: MindOpt Optimization Suite
+Home-page: solver.damo.alibaba.com
+Author-email: solver.damo@list.alibaba-inc.com
+
+MindOpt Python Interface

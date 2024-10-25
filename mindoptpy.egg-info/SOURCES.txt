@@ -1,0 +1,9 @@
+C:/mindopt/1.3.0/win64-x86/lib/python/37/mindoptpy/__init__.py
+C:/mindopt/1.3.0/win64-x86/lib/python/37/mindoptpy/libiomp5md.dll
+C:/mindopt/1.3.0/win64-x86/lib/python/37/mindoptpy/mindopt.dll
+C:/mindopt/1.3.0/win64-x86/lib/python/37/mindoptpy/mindoptmilp_1_3_0.dll
+C:/mindopt/1.3.0/win64-x86/lib/python/37/mindoptpy/mindoptpy.pyd
+mindoptpy.egg-info/PKG-INFO
+mindoptpy.egg-info/SOURCES.txt
+mindoptpy.egg-info/dependency_links.txt
+mindoptpy.egg-info/top_level.txt
