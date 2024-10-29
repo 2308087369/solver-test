@@ -4,7 +4,8 @@ import numpy as np
 import pulp
 from pulp import SCIP_CMD, PULP_CBC_CMD, GLPK_CMD
 import tempfile
-
+import csv
+import time
 # 设置随机种子
 random.seed(1234)
 
@@ -84,34 +85,56 @@ with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
 # 比较多种求解器
 solvers = {
     "SCIP": SCIP_CMD(msg=True),
-    "CBC": PULP_CBC_CMD(msg=True), #速度暂时和SCIP差不多，求解结果一致
-    "GLPK": GLPK_CMD(msg=True) #速度最慢，可能是应用场景不适配。
+    "CBC": PULP_CBC_CMD(msg=True) #速度暂时和SCIP差不多，求解结果一致
+    #"GLPK": GLPK_CMD(msg=True) #速度最慢，可能是应用场景不适配。
     # "Gurobi": pulp.GUROBI_CMD(msg=True), #需要安装Gurobi软件，且需要在系统路径中添加Gurobi可执行文件路径。
     # "CPLEX": pulp.CPLEX_CMD(msg=True), #需要安装CPLEX软件，且需要在系统路径中添加CPLEX可执行文件路径。
     # "XPRESS": pulp.XPRESS_CMD(msg=True), #需要安装XPRESS软件，且需要在系统路径中添加XPRESS可执行文件路径。
     # "Mosek": pulp.MOSEK_CMD(msg=True), #需要安装Mosek软件，且需要在系统路径中添加Mosek可执行文件路径。
 }
 
-results_summary = {}
+# 用于保存各求解器的结果
+results_summary = []
 
 for solver_name, solver in solvers.items():
     print(f"\nUsing solver: {solver_name}")
+    
+    # 记录求解开始时间
+    start_time = time.time()
     model.solve(solver)
-
+    end_time = time.time()
+    
+    # 计算求解时间
+    solve_time = end_time - start_time
+    
     # 打印求解器日志
     with open(log_file_path, 'r') as log_file:
         print(log_file.read())
 
-    # 检查解并输出结果
+    # 检查解并记录结果
     if pulp.LpStatus[model.status] == 'Optimal':
         total_cost_value = pulp.value(model.objective)
         print(f"{solver_name} 求解器使花费最低化：", total_cost_value)
-        results_summary[solver_name] = total_cost_value
+        results_summary.append({
+            "Solver": solver_name,
+            "Total Cost": total_cost_value,
+            "Solve Time (s)": solve_time,
+            "Status": "Optimal"
+        })
     else:
         print(f"{solver_name} 未找到可行解")
+        results_summary.append({
+            "Solver": solver_name,
+            "Total Cost": None,
+            "Solve Time (s)": solve_time,
+            "Status": "Infeasible"
+        })
 
-if results_summary:
-    best_solver = min(results_summary, key=results_summary.get)
-    print(f"\n最佳解由求解器 {best_solver} 得到，总花费为：{results_summary[best_solver]}")
-else:
-    print("\n没有求解器找到最佳解")
+# 将结果写入 CSV 文件
+csv_file_path = "solver_comparison_results.csv"
+with open(csv_file_path, mode='w', newline='') as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=["Solver", "Total Cost", "Solve Time (s)", "Status"])
+    writer.writeheader()
+    writer.writerows(results_summary)
+
+print(f"\n对比结果已保存至 {csv_file_path}")
