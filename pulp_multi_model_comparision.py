@@ -2,7 +2,7 @@ import random
 import pandas as pd
 import numpy as np
 import pulp
-from pulp import SCIP_CMD
+from pulp import SCIP_CMD, PULP_CBC_CMD, GLPK_CMD
 import tempfile
 
 # 设置随机种子
@@ -10,7 +10,7 @@ random.seed(1234)
 
 # 参数设置
 clear_interval = 30
-clear_period = 24 * 600
+clear_period = 24 * 60
 ctrl_interval = 1
 
 if clear_period % clear_interval != 0 or clear_interval % ctrl_interval != 0:
@@ -81,32 +81,37 @@ for i in range(n_ctrl):
 with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
     log_file_path = tmp_file.name
 
-# 使用 SCIP 求解器并将输出重定向到日志文件
-solution = model.solve(SCIP_CMD(msg=True, logPath=log_file_path))
+# 比较多种求解器
+solvers = {
+    "SCIP": SCIP_CMD(msg=True),
+    "CBC": PULP_CBC_CMD(msg=True), #速度暂时和SCIP差不多，求解结果一致
+    "GLPK": GLPK_CMD(msg=True) #速度最慢，可能是应用场景不适配。
+    # "Gurobi": pulp.GUROBI_CMD(msg=True), #需要安装Gurobi软件，且需要在系统路径中添加Gurobi可执行文件路径。
+    # "CPLEX": pulp.CPLEX_CMD(msg=True), #需要安装CPLEX软件，且需要在系统路径中添加CPLEX可执行文件路径。
+    # "XPRESS": pulp.XPRESS_CMD(msg=True), #需要安装XPRESS软件，且需要在系统路径中添加XPRESS可执行文件路径。
+    # "Mosek": pulp.MOSEK_CMD(msg=True), #需要安装Mosek软件，且需要在系统路径中添加Mosek可执行文件路径。
+}
 
-# 打印 SCIP 求解器日志
-with open(log_file_path, 'r') as log_file:
-    print(log_file.read())
+results_summary = {}
 
-# 检查解并输出结果
-if pulp.LpStatus[model.status] == 'Optimal':
-    print("优化后的总花费：", pulp.value(model.objective))
-    
-    charge_values = [pulp.value(x[i]) for i in range(n_ctrl)]
-    discharge_values = [pulp.value(y[i]) for i in range(n_ctrl)]
-    soc_values = [pulp.value(soc[i]) for i in range(n_ctrl)]
-    
-    results = pd.DataFrame({
-        '时间段': range(n_ctrl),
-        '用户负荷': user_loads,
-        '用户功率': user_powers,
-        '电价': elec_price,
-        '充电功率': charge_values,
-        '放电功率': discharge_values,
-        'SOC': soc_values
-    })
-    
-    results.to_excel('optimization_results.xlsx', index=False)
-    print("优化结果已保存为 'optimization_results.xlsx'")
+for solver_name, solver in solvers.items():
+    print(f"\nUsing solver: {solver_name}")
+    model.solve(solver)
+
+    # 打印求解器日志
+    with open(log_file_path, 'r') as log_file:
+        print(log_file.read())
+
+    # 检查解并输出结果
+    if pulp.LpStatus[model.status] == 'Optimal':
+        total_cost_value = pulp.value(model.objective)
+        print(f"{solver_name} 求解器使花费最低化：", total_cost_value)
+        results_summary[solver_name] = total_cost_value
+    else:
+        print(f"{solver_name} 未找到可行解")
+
+if results_summary:
+    best_solver = min(results_summary, key=results_summary.get)
+    print(f"\n最佳解由求解器 {best_solver} 得到，总花费为：{results_summary[best_solver]}")
 else:
-    print("未找到可行解")
+    print("\n没有求解器找到最佳解")

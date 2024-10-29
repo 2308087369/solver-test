@@ -4,13 +4,15 @@ import numpy as np
 import pulp
 from pulp import GLPK_CMD
 import tempfile
+import time
 
+start_time = time.time()
 # 设置随机种子
 random.seed(1234)
 
 # 参数设置
 clear_interval = 30
-clear_period = 24 * 60
+clear_period = 24 * 600
 ctrl_interval = 1
 
 if clear_period % clear_interval != 0 or clear_interval % ctrl_interval != 0:
@@ -102,3 +104,6 @@ if pulp.LpStatus[model.status] == 'Optimal':
     print("优化结果已保存为 'optimization_results.xlsx'")
 else:
     print("未找到可行解")
+end_time = time.time()
+
+print("代码运行时间: {:.2f}秒".format(end_time - start_time))
