@@ -1,0 +1,66 @@
+
+Log for 'C:\Users\JH_PER~1\AppData\Local\Temp\1f9e58c4751f485a868e6a450c0d0b70-pulp.lp' Clone_2 (V22.1.1.0) Tue Oct 29 09:45:55 2024
+
+Tried aggregator 1 time.
+LP Presolve eliminated 6123 rows and 2898 columns.
+Aggregator did 1316 substitutions.
+Reduced LP has 2637 rows, 1546 columns, and 6695 nonzeros.
+Presolve time = 0.02 sec. (9.97 ticks)
+Symmetry aggregator did 1848 additional substitutions.
+Using devex.
+
+Iteration log . . .
+Iteration:     1    Scaled infeas =             0.514929
+Iteration:    41    Objective     =           -13.110000
+
+Primal crossover.
+  Primal:  Fixing 53 variables.
+       52 PMoves:  Infeasibility  6.88139618e+01  Objective -1.53929661e+01
+        0 PMoves:  Infeasibility  6.84900752e+01  Objective -1.53807880e+01
+  Primal:  Pushed 0, exchanged 53.
+  Dual:  Fixing 84 variables.
+       83 DMoves:  Infeasibility  6.08906883e-01  Objective -1.53929661e+01
+        0 DMoves:  Infeasibility  6.08906883e-01  Objective -1.53929661e+01
+  Dual:  Pushed 0, exchanged 84.
+Switched to devex.
+Iteration:   144    Objective     =           -15.380788
+Removing shift (93).
+Iteration:   157    Scaled infeas =            67.857201
+Iteration:   318    Scaled infeas =            13.209988
+Iteration:   489    Scaled infeas =             6.609982
+Iteration:   632    Scaled infeas =             2.023755
+Iteration:   743    Scaled infeas =             0.013430
+Iteration:   749    Objective     =           -14.056390
+Iteration:   856    Objective     =           -14.490902
+
+Dual simplex solved model.
+
+
+Log for 'C:\Users\JH_PER~1\AppData\Local\Temp\1459233253cb4dcc8a4272817fb90832-pulp.lp' Clone_2 (V22.1.1.0) Tue Oct 29 11:07:38 2024
+
+Tried aggregator 1 time.
+LP Presolve eliminated 58405 rows and 28848 columns.
+Aggregator did 14120 substitutions.
+Reduced LP has 28271 rows, 14632 columns, and 70893 nonzeros.
+Presolve time = 0.11 sec. (159.08 ticks)
+
+Iteration log . . .
+Iteration:     1    Scaled infeas =            84.650000
+Switched to devex.
+Iteration:   426    Objective     =           -13.730715
+Iteration:   764    Objective     =           -15.914241
+Iteration:   769    Objective     =           -15.961630
+Iteration:   976    Objective     =           -21.877988
+Iteration:  1318    Objective     =           -24.834046
+Iteration:  1561    Objective     =           -28.871318
+Iteration:  1852    Objective     =           -33.184602
+Iteration:  2032    Objective     =           -40.699582
+Iteration:  2255    Objective     =           -47.628930
+Iteration:  2493    Objective     =           -51.271877
+Iteration:  2693    Objective     =           -60.089574
+Iteration:  2964    Objective     =           -64.822069
+Iteration:  3160    Objective     =           -68.654052
+Iteration:  3338    Objective     =           -76.890800
+
+Dual simplex solved model.
+
